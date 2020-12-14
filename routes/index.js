@@ -7,6 +7,25 @@ router.get('/',(req, res)=>{
   res.status(200).json({ message: "Hello World!"})
 })
 
+// create bookmarks
+router.post("/bookmarks", (req, res)=>{
+  const {url, title} = req.body;
+
+  connection.query(
+    "INSERT INTO bookmark (url, title) VALUES (?, ?)",
+    [url, title],
+    (err, results) => {
+      if (err) {
+        console.log(err);
+        res.status(500).send("Error saving a user");
+      } else {
+        res.status(200).send("Successfully saved");
+      }
+    }
+  );
+})
+
+// get all bookmarks
 router.get('/bookmarks', (req, res)=>{
   connection.query(
     'SELECT * from bookmark', (err, results) => {
@@ -17,6 +36,7 @@ router.get('/bookmarks', (req, res)=>{
       }
     });
 })
+
 router.get('/bookmarks/:id', (req, res) => {
   connection.query(
     'SELECT * from bookmark WHERE id=?',
